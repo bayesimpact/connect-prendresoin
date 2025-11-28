@@ -17,7 +17,7 @@ function App() {
 						</Badge>
 					</>
 				}
-				serviceTagline="Ce service numérique est développé par France Travail dans le cadre de l'attractivité des métiers du soin et de l'accompagnement"
+				serviceTagline="Votre assistant virtuel pour des conseils de santé personnalisés"
 				id="fr-header-simple-header-with-service-title-and-tagline"
 				brandTop={
 					<>
