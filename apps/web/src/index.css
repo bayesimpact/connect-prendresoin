@@ -1,0 +1,10 @@
+/* Tailwind CSS */
+@import "tailwindcss";
+
+/* DSFR-compatible custom styles */
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
