@@ -1,6 +1,7 @@
-import { Badge } from '@codegouvfr/react-dsfr/Badge'
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display'
 import { Header } from '@codegouvfr/react-dsfr/Header'
+import logoFranceTravail from './assets/logo_france_travail.png'
+import logoPrendreSoin from './assets/logo_prendre_soin.png'
 import { ChatContainer } from './components/chat/ChatContainer'
 import { ChatInput } from './components/chat/ChatInput'
 import { Provider as ChatProvider } from './components/chat/context/Provider'
@@ -9,22 +10,19 @@ function App() {
 	return (
 		<>
 			<Header
-				serviceTitle={
-					<>
-						Prendre Soin Chatbot{' '}
-						<Badge as="span" noIcon severity="success">
-							Beta
-						</Badge>
-					</>
-				}
-				serviceTagline="Ce service numérique est développé par France Travail dans le cadre de l'attractivité des métiers du soin et de l'accompagnement"
 				id="fr-header-simple-header-with-service-title-and-tagline"
 				brandTop={
 					<>
-						PRENDRE
+						RÉPUBLIQUE
 						<br />
-						SOIN
+						FRANÇAISE
 					</>
+				}
+				serviceTitle={
+					<div className="flex max-h-10 items-center gap-2">
+						<img src={logoFranceTravail} alt="Logo France Travail" className="h-10 max-h-10 w-auto" />
+						<img src={logoPrendreSoin} alt="Logo Prendre Soin" className="h-10 max-h-10 w-auto" />
+					</div>
 				}
 				homeLinkProps={{ title: 'Accueil - Prendre Soin Chatbot', href: '/' }}
 				quickAccessItems={[
