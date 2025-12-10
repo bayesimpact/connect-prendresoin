@@ -1,4 +1,3 @@
-import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display'
 import { Header } from '@codegouvfr/react-dsfr/Header'
 import logoFranceTravail from './assets/logo_france_travail.png'
 import logoPrendreSoin from './assets/logo_prendre_soin.png'
@@ -25,10 +24,10 @@ function App() {
 					</div>
 				}
 				homeLinkProps={{ title: 'Accueil - Prendre Soin Chatbot', href: '/' }}
-				quickAccessItems={[
-					// Theme toggle
-					headerFooterDisplayItem,
-				]}
+				// quickAccessItems={[
+				// 	// Theme toggle
+				// 	headerFooterDisplayItem,
+				// ]}
 			/>
 			<ChatProvider>
 				<ChatContainer>
