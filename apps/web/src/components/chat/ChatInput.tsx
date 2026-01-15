@@ -18,7 +18,11 @@ export function ChatInput() {
 	// Auto-focus input when AI finishes responding
 	useEffect(() => {
 		if (!isLoading && inputRef.current) {
-			inputRef.current.focus()
+			// DSFR Input component wraps the native input, so we need to find it
+			const nativeInput = inputRef.current.querySelector('input')
+			if (nativeInput) {
+				nativeInput.focus()
+			}
 		}
 	}, [isLoading])
 
