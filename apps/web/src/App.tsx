@@ -7,7 +7,7 @@ import { Provider as ChatProvider } from './components/chat/context/Provider'
 
 function App() {
 	return (
-		<>
+		<div className="flex flex-col h-full">
 			<Header
 				id="fr-header-simple-header-with-service-title-and-tagline"
 				brandTop={
@@ -34,7 +34,7 @@ function App() {
 					<ChatInput />
 				</ChatContainer>
 			</ChatProvider>
-		</>
+		</div>
 	)
 }
 

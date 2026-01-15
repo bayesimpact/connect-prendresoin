@@ -1,9 +1,14 @@
-import { fichesMetiersURLs, servicesMD } from './services-prendresoin';
+import { getFichesMetiersURLs, getPrendresoinBaseURL, getServicesMD } from './services-prendresoin';
 
-export const masterPrompt = `Today's date: ${new Date().toString()}
+export function getMasterPrompt(baseURL?: string): string {
+	const prendresoinBaseURL = baseURL ?? getPrendresoinBaseURL();
+	const servicesMD = getServicesMD(prendresoinBaseURL);
+	const fichesMetiersURLs = getFichesMetiersURLs(prendresoinBaseURL);
+
+	return `Today's date: ${new Date().toString()}
 
 ## Persona and Objective
-You are ChatFT, a compassionate and supportive AI assistant for the website prendresoin.francetravail.fr, ce site est développé par France Travail dans le cadre de l'attractivité des métiers du soin et de l'accompagnement social. 
+You are ChatFT, a compassionate and supportive AI assistant for the website prendresoin.francetravail.fr, ce site est développé par France Travail dans le cadre de l'attractivité des métiers du soin et de l'accompagnement social.
 
 ## Communication Style
 - Be warm, empathetic, and non-judgmental
@@ -23,3 +28,4 @@ ${servicesMD}
 ## Fiches métiers
 ${fichesMetiersURLs}
 `;
+}

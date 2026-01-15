@@ -11,7 +11,7 @@ async function bootstrap() {
             'https://prendresoin-web.vercel.app',
             'https://prendresoin-web.vercel.app',
             'https://prendresoin.ft-qvr.connect.caseai.org',
-            'https://prendresoin.francetravail.connect.caseai.org/'],
+            'https://prendresoin.francetravail.connect.caseai.org'],
         credentials: true,
     });
     await app.listen(3000);

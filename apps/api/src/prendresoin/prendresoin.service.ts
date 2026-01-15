@@ -2,7 +2,7 @@ import { Injectable, MessageEvent } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { v4 } from 'uuid';
 import { AIService } from '../ai/ai.service';
-import { masterPrompt } from './prompt/master';
+import { getMasterPrompt } from './prompt/master';
 import { Message } from './models/message.model';
 import { ChatSession } from './models/chat-session.model';
 
@@ -91,7 +91,7 @@ export class PrendresoinService {
           let fullText = '';
           const streamGenerator = this.aiService.generateChatStream({
             chatSession,
-            masterPrompt,
+            masterPrompt: getMasterPrompt(),
           });
 
           for await (const chunk of streamGenerator) {
