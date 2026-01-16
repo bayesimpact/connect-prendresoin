@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrendreSoin Chat - Iframe Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #000091;
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .info-box {
+            background: #f6f6f6;
+            border-left: 4px solid #000091;
+            padding: 16px;
+            margin-bottom: 24px;
+            border-radius: 4px;
+        }
+
+        .info-box h2 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #000091;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .iframe-container {
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            height: 600px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .control-group input[type="number"] {
+            width: 80px;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .control-group button {
+            padding: 8px 16px;
+            background: #000091;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .control-group button:hover {
+            background: #1212ff;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+
+            .iframe-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 PrendreSoin Chat - Démo Iframe</h1>
+            <p>Simulation d'intégration du chatbot dans un site externe</p>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <h2>ℹ️ À propos de cette démo</h2>
+                <p>
+                    Cette page simule l'intégration du chatbot PrendreSoin dans un site web tiers via une iframe.
+                    Les liens dans les messages du chatbot s'ouvriront dans la fenêtre parente grâce à <code>target="_parent"</code>.
+                </p>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="iframe-height">Hauteur:</label>
+                    <input type="number" id="iframe-height" value="600" min="300" max="1000" step="50">
+                    <button onclick="updateHeight()">Appliquer</button>
+                </div>
+                <div class="control-group">
+                    <button onclick="reloadIframe()">🔄 Recharger l'iframe</button>
+                </div>
+            </div>
+
+            <div class="iframe-container" id="iframe-container">
+                <iframe
+                    id="chat-iframe"
+                    src="http://localhost:3001"
+                    title="PrendreSoin Chat"
+                    allow="clipboard-write"
+                    sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation"
+                ></iframe>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                💡 <strong>Astuce:</strong> Ouvrez les outils de développement pour inspecter l'iframe et son contenu.
+                Les liens cliqués dans le chat s'ouvriront dans cette fenêtre parent.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function updateHeight() {
+            const height = document.getElementById('iframe-height').value;
+            const container = document.getElementById('iframe-container');
+            container.style.height = height + 'px';
+        }
+
+        function reloadIframe() {
+            const iframe = document.getElementById('chat-iframe');
+            iframe.src = iframe.src;
+        }
+
+        // Log iframe messages for debugging
+        window.addEventListener('message', function(event) {
+            console.log('Message from iframe:', event.data);
+        });
+
+        // Log when iframe loads
+        document.getElementById('chat-iframe').addEventListener('load', function() {
+            console.log('✅ Iframe loaded successfully');
+        });
+    </script>
+</body>
+</html>
