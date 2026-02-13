@@ -14,7 +14,7 @@ This project connects jobseekers with resources from Prendre Soin, a workforce d
 
 * [ ] Clean CORS for production.
 * [ ] Force iframe source.
-* [ ] Implement auto-scroll.
+* [x] Implement auto-scroll.
 
 ## Installation
 
