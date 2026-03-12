@@ -1,3 +1,4 @@
+import { guardrails } from './guardrails';
 import { getFichesMetiersURLs, getPrendresoinBaseURL, getServicesMD } from './services-prendresoin';
 
 export function getMasterPrompt(baseURL?: string): string {
@@ -27,5 +28,7 @@ ${servicesMD}
 
 ## Fiches métiers
 ${fichesMetiersURLs}
+
+${guardrails}
 `;
 }
