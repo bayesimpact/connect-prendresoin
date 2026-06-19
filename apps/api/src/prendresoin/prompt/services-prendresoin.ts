@@ -369,5 +369,65 @@ Idf + à venir = Intégration complète avec moteur de recherche. Redirection ve
   - Socle
   - **Type de service** : En cours de développement
 
+-----
+
+### 4. Je recrute - Publier des offres d'emploi
+
+  - Socle
+  - **Question** : Comment puis-je recruter ?
+  - **Type de service** : Redirection simple
+  - **URL de redirection** : [https://pro.francetravail.fr/accueil/description/publier-offre](https://pro.francetravail.fr/accueil/description/publier-offre)
+  - **Description** : Publiez vos offres d'emploi sur francetravail.fr
+
+-----
+
+### 4. Je recrute - Banque de profils
+
+  - Socle
+  - **Question** : Comment recruter directement sans déposer d'offre ?
+  - **Type de service** : Redirection simple
+  - **URL de redirection** : [https://pro.francetravail.fr/accueil/description/profil](https://pro.francetravail.fr/accueil/description/profil)
+  - **Description** : Recruter directement des candidats sans avoir à déposer une offre d'emploi
+
+-----
+
+### 4. Je recrute - Immersion facilitée
+
+  - Socle
+  - **Question** : Comment faire découvrir vos métiers à de nouveaux talents ?
+  - **Type de service** : Redirection simple
+  - **URL de redirection** : [https://immersion-facile.beta.gouv.fr/accueil-entreprises](https://immersion-facile.beta.gouv.fr/accueil-entreprises)
+  - **Description** : Accueillez des candidats pour faire découvrir vos métiers, votre entreprise. Sécurisez vos recrutements, facilitez l'intégration de votre futur salarié
+
+-----
+
+### 4. Je recrute - Méthode de recrutement par simulation (MRS)
+
+  - Socle
+  - **Question** : Comment élargir mon sourcing ?
+  - **Type de service** : Redirection simple
+  - **URL de redirection** : [https://pro.francetravail.fr/accueil/description/mrs](https://pro.francetravail.fr/accueil/description/mrs)
+  - **Description** : Recruter autrement et élargissez votre recherche de candidats avec la méthode de recrutement par simulation
+
+-----
+
+### 4. Je recrute - POEI Préparation opérationnelle à l'emploi individuelle
+
+  - Socle
+  - **Question** : Comment former un candidat avant de l'embaucher ?
+  - **Type de service** : Redirection simple
+  - **URL de redirection** : [https://pro.francetravail.fr/accueil/description/poei](https://pro.francetravail.fr/accueil/description/poei)
+  - **Description** : Formez votre candidat au sein de votre entreprise et/ou avec l'appui d'un organisme de formation
+
+-----
+
+### 4. Je recrute - Demande de rappel
+
+  - Socle
+  - **Question** : Comment être contacté par un conseiller ?
+  - **Type de service** : Redirection simple
+  - **URL de redirection** : [https://pro.francetravail.fr/accueil/demandederappel](https://pro.francetravail.fr/accueil/demandederappel)
+  - **Description** : Laissez-nous vos coordonnées et nous vous rappellerons sur la plage horaire choisie.
+
 -----`;
 }
