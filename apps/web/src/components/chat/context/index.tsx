@@ -4,6 +4,7 @@ import type { Message } from '../../types'
 export type ChatContextType = {
 	messages: Message[]
 	sessionId: string | null
+	sessionToken: string | null
 	setMessages: Dispatch<SetStateAction<Message[]>>
 }
 

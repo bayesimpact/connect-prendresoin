@@ -1,6 +1,6 @@
 import { Input } from '@codegouvfr/react-dsfr/Input'
 import { useEffect, useRef, useState } from 'react'
-import { useApiUrl } from '../../hooks/use-api-url'
+import { useApiUrl, useEmbedToken } from '../../hooks/use-api-url'
 import { ChatInputSubmitButton } from './ChatInputSubmitButton'
 import { useChat } from './context/hook'
 import { createLoadingMessage, createUserMessage } from './helpers'
@@ -11,9 +11,10 @@ export function ChatInput() {
 	const [isLoading, setIsLoading] = useState(false)
 	const [inputValue, setInputValue] = useState('')
 	const apiUrl = useApiUrl()
-	const { sessionId, setMessages } = useChat()
+	const embedToken = useEmbedToken()
+	const { sessionId, sessionToken, setMessages } = useChat()
 
-	const { handleSSEConnection } = useSSE({ setMessages, isLoading, setIsLoading })
+	const { handleSSEConnection } = useSSE({ setMessages, setIsLoading })
 
 	// Auto-focus input when AI finishes responding
 	useEffect(() => {
@@ -27,7 +28,7 @@ export function ChatInput() {
 	}, [isLoading])
 
 	const handleSendMessage = async () => {
-		if (!inputValue.trim() || isLoading || !sessionId) return
+		if (!inputValue.trim() || isLoading || !sessionId || !sessionToken) return
 
 		const userMessage = createUserMessage({ content: inputValue })
 		setMessages((prev) => [...prev, userMessage])
@@ -37,9 +38,11 @@ export function ChatInput() {
 		const { id: loadingMessageId, message: loadingMessage } = createLoadingMessage()
 		setMessages((prev) => [...prev, loadingMessage])
 
-		const eventSource = new EventSource(createSSEUrl(apiUrl, sessionId, userMessage.content))
-
-		handleSSEConnection(eventSource, loadingMessageId)
+		await handleSSEConnection(
+			createSSEUrl(apiUrl, embedToken, sessionId, userMessage.content),
+			sessionToken,
+			loadingMessageId,
+		)
 	}
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {

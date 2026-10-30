@@ -1,14 +1,15 @@
 import { type Dispatch, type SetStateAction, useCallback } from 'react'
 import { createBotMessage } from '../components/chat/helpers'
 import type { Message, MessageEventData } from '../components/types'
+import { agentBasePath } from './use-api-url'
+
+type CloseStream = () => void
 
 export function useSSE({
 	setMessages,
-	isLoading,
 	setIsLoading,
 }: {
 	setMessages: Dispatch<SetStateAction<Message[]>>
-	isLoading: boolean
 	setIsLoading: Dispatch<SetStateAction<boolean>>
 }) {
 	const handleStartEvent = useCallback(
@@ -19,7 +20,7 @@ export function useSSE({
 						? createBotMessage({
 								id: data.messageId,
 								content: '...',
-								timestamp: new Date(data.timestamp),
+								timestamp: data.timestamp ? new Date(data.timestamp) : new Date(),
 								isInitializing: false,
 							})
 						: msg,
@@ -47,7 +48,7 @@ export function useSSE({
 	)
 
 	const handleEndEvent = useCallback(
-		(data: MessageEventData, eventSource: EventSource) => {
+		(data: MessageEventData, closeStream: CloseStream) => {
 			setMessages((prev) =>
 				prev.map((msg) =>
 					msg.id === data.messageId
@@ -55,16 +56,16 @@ export function useSSE({
 						: msg,
 				),
 			)
-			eventSource.close()
+			closeStream()
 			setIsLoading(false)
 		},
 		[setMessages, setIsLoading],
 	)
 
 	const handleErrorEvent = useCallback(
-		(data: MessageEventData, eventSource: EventSource) => {
+		(data: MessageEventData, closeStream: CloseStream) => {
 			console.error('Stream error:', data.error)
-			eventSource.close()
+			closeStream()
 			setMessages((prev) => {
 				if (!data.error) return prev
 				return [
@@ -82,18 +83,16 @@ export function useSSE({
 	)
 
 	const handleSSEError = useCallback(() => {
-		if (isLoading) {
-			const errorMessage = createBotMessage({ content: 'Erreur' })
-			setMessages((prev) => [...prev, errorMessage])
-			setIsLoading(false)
-		}
-	}, [isLoading, setIsLoading, setMessages])
+		const errorMessage = createBotMessage({ content: 'Erreur' })
+		setMessages((prev) => [...prev, errorMessage])
+		setIsLoading(false)
+	}, [setIsLoading, setMessages])
 
 	const createSSEEventHandler = useCallback(
 		(loadingMessageId: string, messageId: string, content: string) => {
-			return (event: MessageEvent, eventSource: EventSource) => {
+			return (eventData: string, closeStream: CloseStream) => {
 				try {
-					const data: MessageEventData = JSON.parse(event.data)
+					const data: MessageEventData = JSON.parse(eventData)
 
 					switch (data.type) {
 						case 'start':
@@ -101,10 +100,10 @@ export function useSSE({
 						case 'chunk':
 							return handleChunkEvent(data, content)
 						case 'end':
-							handleEndEvent(data, eventSource)
+							handleEndEvent(data, closeStream)
 							return null
 						case 'error':
-							handleErrorEvent(data, eventSource)
+							handleErrorEvent(data, closeStream)
 							return null
 						default:
 							return { messageId, content }
@@ -118,24 +117,56 @@ export function useSSE({
 		[handleStartEvent, handleChunkEvent, handleEndEvent, handleErrorEvent],
 	)
 
+	// The session token travels in a header, which EventSource cannot send: read the SSE body with fetch
 	const handleSSEConnection = useCallback(
-		(eventSource: EventSource, loadingMessageId: string) => {
+		async (url: string, sessionToken: string, loadingMessageId: string) => {
 			let currentMessageId = ''
 			let currentContent = ''
+			let isClosed = false
+			const abortController = new AbortController()
+			const closeStream = () => {
+				isClosed = true
+				abortController.abort()
+			}
 
-			eventSource.addEventListener('message', (event) => {
+			const handleEventData = (eventData: string) => {
 				const handler = createSSEEventHandler(loadingMessageId, currentMessageId, currentContent)
-				const result = handler(event, eventSource)
+				const result = handler(eventData, closeStream)
 
 				if (result) {
 					currentMessageId = result.messageId
 					currentContent = result.content
 				}
-			})
+			}
 
-			eventSource.onerror = (error) => {
-				console.error('EventSource error:', error)
-				eventSource.close()
+			try {
+				const response = await fetch(url, {
+					headers: { Accept: 'text/event-stream', 'X-Session-Token': sessionToken },
+					signal: abortController.signal,
+				})
+				if (!response.ok || !response.body) throw new Error(`Stream failed: ${response.status}`)
+
+				const reader = response.body.pipeThrough(new TextDecoderStream()).getReader()
+				let buffer = ''
+				while (!isClosed) {
+					const { value, done } = await reader.read()
+					if (done) break
+					buffer += value
+					const frames = buffer.split(/\r?\n\r?\n/)
+					buffer = frames.pop() ?? ''
+					for (const frame of frames) {
+						const dataLines = frame
+							.split(/\r?\n/)
+							.filter((line) => line.startsWith('data:'))
+							.map((line) => line.slice(5).trimStart())
+						if (dataLines.length > 0 && !isClosed) handleEventData(dataLines.join('\n'))
+					}
+				}
+				// The server closes the connection after the final event
+				if (!isClosed) handleSSEError()
+			} catch (error) {
+				if (isClosed) return
+				console.error('Stream error:', error)
 				handleSSEError()
 			}
 		},
@@ -145,7 +176,7 @@ export function useSSE({
 	return { handleSSEConnection }
 }
 
-export const createSSEUrl = (apiUrl: string, sessionId: string, content: string): string => {
-	const params = new URLSearchParams({ sessionId, content })
-	return `${apiUrl}/prendresoin/message-stream?${params}`
+export const createSSEUrl = (apiUrl: string, embedToken: string, sessionId: string, content: string): string => {
+	const params = new URLSearchParams({ q: JSON.stringify({ payload: { content } }) })
+	return `${agentBasePath(apiUrl, embedToken)}/sessions/${sessionId}/messages/stream?${params}`
 }
