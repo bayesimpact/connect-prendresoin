@@ -11,7 +11,8 @@ export interface Message {
 export type MessageEventData = MessageEvent<{
 	type: 'start' | 'chunk' | 'end' | 'error'
 	messageId: string
-	timestamp: string
+	timestamp?: string
 	content?: string
+	fullContent?: string
 	error?: string
 }>['data']

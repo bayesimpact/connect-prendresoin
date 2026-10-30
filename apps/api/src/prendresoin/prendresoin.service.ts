@@ -23,7 +23,7 @@ export class PrendresoinService {
     const sessionId = v4();
     const initialMessage = new Message(
       v4(),
-      "Bienvenue sur Prendre Soin! Comment puis-je vous aider aujourd'hui ?",
+      "Bienvenue sur Prendre Soin ! Comment puis-je vous aider aujourd'hui ?",
       'assistant',
       new Date(),
     );

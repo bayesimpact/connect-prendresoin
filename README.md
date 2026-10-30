@@ -25,6 +25,15 @@ npm install
 npm run dev
 ```
 
+## Configuration
+
+The frontend talks to an agent of the Bayes Impact platform through its public chat API. Set these variables in `apps/web/.env`:
+
+| Variable | Value |
+|---|---|
+| `VITE_API_URL` | Base URL of the platform instance, without `/public` |
+| `VITE_EMBED_TOKEN` | Embed token of the agent (agent editor, **Embed** tab) |
+
 ## Licensing
 
 Licensed under the MIT License. We welcome reuse by any organization.
