@@ -6,8 +6,6 @@ import { useSession } from '../../../hooks/use-session'
 export function Provider({ children }: { children: ReactNode }) {
 	const apiUrl = useApiUrl()
 	const embedToken = useEmbedToken()
-	const { messages, setMessages, sessionId, sessionToken } = useSession({ apiUrl, embedToken })
-	return (
-		<ChatContext.Provider value={{ messages, setMessages, sessionId, sessionToken }}>{children}</ChatContext.Provider>
-	)
+	const { messages, setMessages, ensureSession } = useSession({ apiUrl, embedToken })
+	return <ChatContext.Provider value={{ messages, setMessages, ensureSession }}>{children}</ChatContext.Provider>
 }
