@@ -1,10 +1,10 @@
 import { createContext, type Dispatch, type SetStateAction } from 'react'
+import type { PublicSession } from '../../../hooks/use-session'
 import type { Message } from '../../types'
 
 export type ChatContextType = {
 	messages: Message[]
-	sessionId: string | null
-	sessionToken: string | null
+	ensureSession: () => Promise<PublicSession>
 	setMessages: Dispatch<SetStateAction<Message[]>>
 }
 

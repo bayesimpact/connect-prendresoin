@@ -3,8 +3,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useApiUrl, useEmbedToken } from '../../hooks/use-api-url'
 import { ChatInputSubmitButton } from './ChatInputSubmitButton'
 import { useChat } from './context/hook'
-import { createLoadingMessage, createUserMessage } from './helpers'
+import { createBotMessage, createLoadingMessage, createUserMessage } from './helpers'
 import { createSSEUrl, useSSE } from '../../hooks/use-sse';
+import type { PublicSession } from '../../hooks/use-session'
 
 export function ChatInput() {
 	const inputRef = useRef<HTMLInputElement>(null)
@@ -12,7 +13,7 @@ export function ChatInput() {
 	const [inputValue, setInputValue] = useState('')
 	const apiUrl = useApiUrl()
 	const embedToken = useEmbedToken()
-	const { sessionId, sessionToken, setMessages } = useChat()
+	const { ensureSession, setMessages } = useChat()
 
 	const { handleSSEConnection } = useSSE({ setMessages, setIsLoading })
 
@@ -28,7 +29,7 @@ export function ChatInput() {
 	}, [isLoading])
 
 	const handleSendMessage = async () => {
-		if (!inputValue.trim() || isLoading || !sessionId || !sessionToken) return
+		if (!inputValue.trim() || isLoading) return
 
 		const userMessage = createUserMessage({ content: inputValue })
 		setMessages((prev) => [...prev, userMessage])
@@ -38,9 +39,22 @@ export function ChatInput() {
 		const { id: loadingMessageId, message: loadingMessage } = createLoadingMessage()
 		setMessages((prev) => [...prev, loadingMessage])
 
+		let session: PublicSession
+		try {
+			session = await ensureSession()
+		} catch (error) {
+			console.error('Failed to create session:', error)
+			setMessages((prev) => [
+				...prev.filter((message) => message.id !== loadingMessageId),
+				createBotMessage({ content: 'Erreur', isFinished: true }),
+			])
+			setIsLoading(false)
+			return
+		}
+
 		await handleSSEConnection(
-			createSSEUrl(apiUrl, embedToken, sessionId, userMessage.content),
-			sessionToken,
+			createSSEUrl(apiUrl, embedToken, session.sessionId, userMessage.content),
+			session.sessionToken,
 			loadingMessageId,
 		)
 	}
